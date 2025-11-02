@@ -44,55 +44,79 @@
         name: "Kaos Polo Premium Korean",
         link: "https://s.shopee.co.id/70BwuIB9Ci",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7rasg-m31uip9skgyd74.webp",
+        category: "Baju" // Kategori ditambahkan
       },
       {
         id: 2,
         name: "Kaos Luffy Kecil",
         link: "https://s.shopee.co.id/BLclsYHYN",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7rasm-m0u97zreuv7if3.webp",
+        category: "Baju"
       },
       {
         id: 3,
         name: "Kaos Shin-Chan",
         link: "https://s.shopee.co.id/gHtqj7uz5",
         imageUrl: "https://down-id.img.susercontent.com/file/sg-11134201-825ak-mfxke83d9p1qb1.webp",
+        category: "Baju"
       },
       {
         id: 4,
         name: "Kaos Washed Vintage",
         link: "https://s.shopee.co.id/3fvWDNG8w7",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7r990-lpnqt87a0ov2ea.webp",
+        category: "Baju"
       },
       {
         id: 5,
         name: "Jersey Platinum Unisex",
         link: "https://s.shopee.co.id/804VRHJbJL",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7rbk9-mals5qfuez3288.webp",
+        category: "Baju"
       },
       {
         id: 6,
         name: "Kaos Stripe Navy",
         link: "https://s.shopee.co.id/804VdPJ8bP",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7rasj-m2xc2r8k1k80ea.webp",
+        category: "Baju"
       },
       {
         id: 7,
         name: "Jaket Traktop Windbreaker",
         link: "https://s.shopee.co.id/5AkKzjp6dY",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-7r98y-lx6lgmalnwv280.webp",
+        category: "Jaket"
       },
       {
         id: 8,
         name: "Jaket Nylon Overblock Leapard",
         link: "https://s.shopee.co.id/3qExbdX0yM",
         imageUrl: "https://down-id.img.susercontent.com/file/sg-11134201-8258y-mg64ethfzmkv0c.webp",
+        category: "Jaket"
       },
       {
         id: 9,
         name: "Kaos Stripe Hitam Premium",
         link: "https://s.shopee.co.id/2B6jpklpzv",
         imageUrl: "https://down-id.img.susercontent.com/file/id-11134207-8224s-mggdyxdubmdle8.webp",
+        category: "Baju"
       },
+      // Produk placeholder untuk Celana dan Aksesoris
+      {
+        id: 10,
+        name: "Celana Jeans Slim Fit",
+        link: "https://affiliatelink.com/celana1",
+        imageUrl: "https://placehold.co/400x500/1e3a8a/bfdbfe?text=CELANA+DENIM",
+        category: "Celana"
+      },
+      {
+        id: 11,
+        name: "Topi Baseball Casual",
+        link: "https://affiliatelink.com/aksesoris1",
+        imageUrl: "https://placehold.co/400x400/065f46/a7f3d0?text=TOPI",
+        category: "Aksesoris"
+      }
     ];
 
     // Product Card Component
@@ -140,10 +164,37 @@
 
     // Main Application Component
     const App = () => {
+      // Menggunakan React.useState untuk melacak kategori yang dipilih
+      const [activeCategory, setActiveCategory] = React.useState('Semua');
+
+      const CATEGORIES = ['Semua', 'Baju', 'Jaket', 'Celana', 'Aksesoris'];
+
+      // Logic untuk memfilter produk berdasarkan kategori yang aktif
+      const filteredProducts = PRODUCTS.filter(product => 
+        activeCategory === 'Semua' || product.category === activeCategory
+      );
+
+      // Komponen tombol filter
+      const FilterButton = ({ category }) => {
+        const isActive = category === activeCategory;
+        const baseClasses = "px-4 py-2 mx-1 sm:mx-2 rounded-full font-medium transition-all duration-200 shadow-md whitespace-nowrap";
+        const activeClasses = "bg-cyan-500 text-white shadow-cyan-500/50 hover:bg-cyan-600";
+        const inactiveClasses = "bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white";
+
+        return (
+          <button
+            onClick={() => setActiveCategory(category)}
+            className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses}`}
+          >
+            {category}
+          </button>
+        );
+      };
+
       return (
         <div className="min-h-screen bg-gray-900 font-sans p-4 sm:p-8">
           {/* Header */}
-          <header className="text-center mb-12">
+          <header className="text-center mb-6">
             <h1 className="text-5xl font-extrabold text-white tracking-tight">
               Tapserda
             </h1>
@@ -152,14 +203,27 @@
             </p>
           </header>
 
+          {/* Filter Menu (Bagian Baru) */}
+          <div className="flex justify-center flex-wrap gap-2 mb-12">
+            {CATEGORIES.map(category => (
+              <FilterButton key={category} category={category} />
+            ))}
+          </div>
+
           {/* Responsive Product Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr">
-            {PRODUCTS.map((product) => (
-              // Div luar mengatur rasio aspek/ukuran di grid
-              <div key={product.id} className="min-h-[300px] h-full">
-                <ProductCard product={product} />
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <div key={product.id} className="min-h-[300px] h-full">
+                  <ProductCard product={product} />
+                </div>
+              ))
+            ) : (
+              // Pesan jika tidak ada produk yang cocok
+              <div className="col-span-full text-center p-10 text-gray-400 text-2xl bg-gray-800 rounded-xl">
+                Tidak ada produk untuk kategori "{activeCategory}" saat ini.
               </div>
-            ))}
+            )}
           </div>
 
           {/* Footer / Attribution */}
@@ -179,4 +243,3 @@
   </script>
 </body>
 </html>
-
