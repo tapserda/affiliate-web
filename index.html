@@ -29,7 +29,8 @@
         font-family: 'Inter', sans-serif;
         min-height: 100vh;
         margin: 0;
-        background-color: #0f172a; /* Same as bg-gray-900 in Tailwind */
+        /* Menggunakan gradien ungu royal untuk latar belakang */
+        background-color: #0f172a; 
     }
   </style>
 </head>
@@ -103,7 +104,31 @@
         category: "Baju"
       },
       // Produk placeholder untuk Celana dan Aksesoris
+      {
+        id: 10,
+        name: "Celana Jeans Slim Fit",
+        link: "https://affiliatelink.com/celana1",
+        imageUrl: "https://placehold.co/400x500/1e3a8a/bfdbfe?text=CELANA+DENIM",
+        category: "Celana"
+      },
+      {
+        id: 11,
+        name: "Topi Baseball Casual",
+        link: "https://affiliatelink.com/aksesoris1",
+        imageUrl: "https://placehold.co/400x400/065f46/a7f3d0?text=TOPI",
+        category: "Aksesoris"
+      }
     ];
+
+    // SVG Icon for Shopee (Standard orange color)
+    const ShopeeIcon = () => (
+        <img
+        src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/shopee-icon.png"
+        alt="triangle with equal sides"
+        height="50"
+        width="55"
+        />
+    );
 
     // Product Card Component
     const ProductCard = ({ product }) => {
@@ -114,7 +139,7 @@
 
       return (
         <div
-          className="group w-full h-full cursor-pointer rounded-xl overflow-hidden shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] bg-gray-800"
+          className="group w-full h-full cursor-pointer rounded-xl overflow-hidden shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] bg-gray-900 border border-transparent hover:border-purple-500"
           onClick={handleClick}
         >
           {/* Product Image/Box Area */}
@@ -130,19 +155,21 @@
               }}
             />
             {/* Hover overlay text */}
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <span className="text-white text-xl font-bold tracking-wider p-4 border-2 border-white rounded-lg text-center">
-                {product.name}
+                LIHAT
               </span>
             </div>
           </div>
 
           {/* Product Name/Affiliate Text */}
           <div className="p-4 text-center">
-            <h3 className="text-lg font-semibold text-gray-100 group-hover:text-cyan-400 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-100 group-hover:text-purple-400 transition-colors">
               {product.name}
             </h3>
-            <p className="text-sm text-gray-400 mt-1">Link Afiliasi</p>
+            <p className="text-sm text-gray-400 mt-1 flex items-center justify-center">
+                <span className="text-orange-400 text-base mr-1">&#9733;</span> Link Shopee
+            </p>
           </div>
         </div>
       );
@@ -150,12 +177,10 @@
 
     // Main Application Component
     const App = () => {
-      // Menggunakan React.useState untuk melacak kategori yang dipilih
       const [activeCategory, setActiveCategory] = React.useState('Semua');
 
       const CATEGORIES = ['Semua', 'Baju', 'Jaket', 'Celana', 'Aksesoris'];
 
-      // Logic untuk memfilter produk berdasarkan kategori yang aktif
       const filteredProducts = PRODUCTS.filter(product => 
         activeCategory === 'Semua' || product.category === activeCategory
       );
@@ -163,9 +188,11 @@
       // Komponen tombol filter
       const FilterButton = ({ category }) => {
         const isActive = category === activeCategory;
-        const baseClasses = "px-4 py-2 mx-1 sm:mx-2 rounded-full font-medium transition-all duration-200 shadow-md whitespace-nowrap";
-        const activeClasses = "bg-cyan-500 text-white shadow-cyan-500/50 hover:bg-cyan-600";
-        const inactiveClasses = "bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white";
+        const baseClasses = "px-4 py-2 mx-1 sm:mx-2 rounded-full font-medium transition-all duration-200 shadow-lg whitespace-nowrap";
+        // Warna aktif diubah ke ungu, bayangan juga ungu
+        const activeClasses = "bg-purple-600 text-white shadow-purple-500/50 hover:bg-purple-700";
+        // Warna tidak aktif diubah ke abu-abu gelap
+        const inactiveClasses = "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white";
 
         return (
           <button
@@ -178,18 +205,19 @@
       };
 
       return (
-        <div className="min-h-screen bg-gray-900 font-sans p-4 sm:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-gray-900 font-sans p-4 sm:p-8">
           {/* Header */}
           <header className="text-center mb-6">
-            <h1 className="text-5xl font-extrabold text-white tracking-tight">
-              Tapserda
+            <h1 className="text-5xl font-extrabold text-white tracking-tight flex items-center justify-center">
+                <ShopeeIcon />
+                Tapserda
             </h1>
-            <p className="mt-3 text-xl text-gray-400">
+            <p className="mt-3 text-xl font-light text-purple-200">
               checkout sekarang juga !
             </p>
           </header>
 
-          {/* Filter Menu (Bagian Baru) */}
+          {/* Filter Menu */}
           <div className="flex justify-center flex-wrap gap-2 mb-12">
             {CATEGORIES.map(category => (
               <FilterButton key={category} category={category} />
@@ -206,15 +234,15 @@
               ))
             ) : (
               // Pesan jika tidak ada produk yang cocok
-              <div className="col-span-full text-center p-10 text-gray-400 text-2xl bg-gray-800 rounded-xl">
+              <div className="col-span-full text-center p-10 text-purple-200 text-2xl bg-gray-800 rounded-xl border border-purple-500">
                 Tidak ada produk untuk kategori "{activeCategory}" saat ini.
               </div>
             )}
           </div>
 
           {/* Footer / Attribution */}
-          <footer className="text-center mt-16 pt-8 border-t border-gray-800">
-            <p className="text-gray-500 text-sm">
+          <footer className="text-center mt-16 pt-8 border-t border-purple-800">
+            <p className="text-purple-300 text-sm">
               Dibangun dengan React & Tailwind CSS (menggunakan CDN).
             </p>
           </footer>
@@ -229,6 +257,3 @@
   </script>
 </body>
 </html>
-
-
-
